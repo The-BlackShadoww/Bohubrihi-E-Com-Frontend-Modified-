@@ -181,15 +181,6 @@ const CreateProduct = () => {
             <Button variant="contained" type="submit" disabled={disabled}>
                 Create Product
             </Button>
-            {/* 
-            <button
-                className="w-full border p-4"
-                type="submit"
-                disabled={disabled}
-            >
-                Create Product
-            </button> 
-            */}
         </form>
     );
 

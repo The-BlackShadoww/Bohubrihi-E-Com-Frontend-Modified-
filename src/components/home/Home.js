@@ -7,9 +7,11 @@ import {
     getCategories,
     getProducts,
     getFilteredProducts,
+    getOrderedProducts,
 } from "../../api/apiProduct";
 import CheckBox from "./CheckBox";
 import RadioBox from "./RadioBox";
+import Ordering from "./Ordering";
 import { prices } from "../../utils/prices";
 import { isAuthenticated, userInfo } from "../../utils/auth";
 import { addToCart } from "../../api/apiOrder";
@@ -33,13 +35,14 @@ const Home = () => {
     useEffect(() => {
         getProducts(sortBy, order, limit)
             .then((response) => setProducts(response.data))
-            .catch((err) => setError("Failed to load products!"));
+            .catch((err) => setError("Failed to load products From Backend!"));
 
         getCategories()
             .then((response) => setCategories(response.data))
             .catch((err) => setError("Failed to load categories!"));
     }, []);
 
+    // console.log(categories);
     const handleAddToCart = (product) => () => {
         if (isAuthenticated()) {
             setError(false);
@@ -53,7 +56,7 @@ const Home = () => {
             addToCart(user.token, cartItem)
                 .then((reponse) => setSuccess(true))
                 .catch((err) => {
-                    //! ?????????????? 
+                    //! ??????????????
                     console.log(err.response);
                     if (err.response) setError(err.response.data);
                     else setError("Adding to cart failed!");
@@ -65,6 +68,7 @@ const Home = () => {
     };
 
     const handleFilters = (myfilters, filterBy) => {
+        console.log("Send from handleFilters ==>", myfilters);
         const newFilters = { ...filters };
         if (filterBy === "category") {
             newFilters[filterBy] = myfilters;
@@ -85,11 +89,22 @@ const Home = () => {
             .catch((err) => setError("Failed to load products!"));
     };
 
+    //todo ==> Modification
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        console.log(order);
+
+        getOrderedProducts(order, sortBy)
+            .then((res) => setProducts(res.data))
+            .catch((err) => console.log(err));
+    };
+
     const showFilters = () => {
         return (
             <div className="mb-10">
                 <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Typography variant="h5">
                             Filter By Categories:
                         </Typography>
@@ -104,7 +119,7 @@ const Home = () => {
                         </ul>
                         {/* {JSON.stringify(filters)} */}
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Typography variant="h5">Filter By Price:</Typography>
 
                         <div className="">
@@ -115,6 +130,11 @@ const Home = () => {
                                 }
                             />
                         </div>
+                    </Grid>
+                    {/* //todo ==> Modifications */}
+                    <Grid item xs={4}>
+                        <Typography variant="h5">Select ordering:</Typography>
+                        <Ordering handleOrder={handleOrder} />
                     </Grid>
                 </Grid>
             </div>

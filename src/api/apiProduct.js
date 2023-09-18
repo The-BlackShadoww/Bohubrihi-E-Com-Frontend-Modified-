@@ -35,3 +35,17 @@ export const getFilteredProducts = (
         },
     });
 };
+
+//todo ==>> Modifications
+
+export const getOrderedProducts = (order, sortBy) => {
+    const data = {
+        order: order,
+        sortBy: sortBy,
+    };
+    return axios.post(`${API}/product/order`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};
