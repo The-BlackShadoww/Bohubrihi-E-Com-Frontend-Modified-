@@ -13,7 +13,7 @@ const CheckBox = ({ categories, handleFilters }) => {
         // console.log(id);
         //* this indexOf method return -1 when id is not found and return index of the id or first index.
         const foundId = checked.indexOf(id);
-        console.log(foundId);
+        // console.log(foundId);
         if (foundId === -1) {
             checkedIds.push(id);
         } else {

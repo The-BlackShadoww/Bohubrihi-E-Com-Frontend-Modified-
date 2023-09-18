@@ -39,6 +39,8 @@ export const getFilteredProducts = (
 //todo ==>> Modifications
 
 export const getOrderedProducts = (order, sortBy) => {
+    console.log("order :", order);
+    console.log("sortBy :", sortBy);
     const data = {
         order: order,
         sortBy: sortBy,
