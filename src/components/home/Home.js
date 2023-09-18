@@ -31,12 +31,6 @@ const Home = () => {
         category: [],
         price: [],
     });
-    // const [selectedOrder, setSelectedOrder] = useState({
-    //     desc: "",
-    //     asc: "",
-    // });
-
-    // console.log("This is selected order state: ",selectedOrder);
 
     useEffect(() => {
         getProducts(sortBy, order, limit)
@@ -48,7 +42,6 @@ const Home = () => {
             .catch((err) => setError("Failed to load categories!"));
     }, []);
 
-    // console.log(categories);
     const handleAddToCart = (product) => () => {
         if (isAuthenticated()) {
             setError(false);
@@ -74,7 +67,6 @@ const Home = () => {
     };
 
     const handleFilters = (myfilters, filterBy) => {
-        // console.log("Send from handleFilters ==>", myfilters);
         const newFilters = { ...filters };
         if (filterBy === "category") {
             newFilters[filterBy] = myfilters;
@@ -89,7 +81,7 @@ const Home = () => {
             }
             newFilters[filterBy] = arr;
         }
-        console.log("this is newFilters: ", newFilters);
+
         setFilters(newFilters);
         getFilteredProducts(skip, limit, newFilters, order, sortBy)
             .then((response) => setProducts(response.data))
@@ -100,10 +92,10 @@ const Home = () => {
 
     const handleOrder = (e) => {
         const order = e.target.value;
-        console.log("Selected order =>", order);
+
         getOrderedProducts(order, sortBy)
             .then((res) => setProducts(res.data))
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err.message));
     };
 
     const showFilters = () => {
