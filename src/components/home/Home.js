@@ -15,13 +15,13 @@ import Ordering from "./Ordering";
 import { prices } from "../../utils/prices";
 import { isAuthenticated, userInfo } from "../../utils/auth";
 import { addToCart } from "../../api/apiOrder";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
 //! MY HOME ---------------
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [limit, setLimit] = useState(30);
+    const [limit, setLimit] = useState(4);
     const [skip, setSkip] = useState(0);
     const [order, setOrder] = useState("asc");
     const [sortBy, setSortBy] = useState("createdAt");
@@ -33,7 +33,8 @@ const Home = () => {
     });
 
     useEffect(() => {
-        getProducts(sortBy, order, limit)
+        //todo ==>> modification
+        getProducts(sortBy, order, limit, skip)
             .then((response) => setProducts(response.data))
             .catch((err) => setError("Failed to load products From Backend!"));
 
@@ -97,6 +98,17 @@ const Home = () => {
             .then((res) => setProducts(res.data))
             .catch((err) => console.log(err.message));
     };
+
+    const handleLoadMore = () => {
+        const newSkip = skip + 1;
+        setSkip(newSkip);
+
+        getProducts(sortBy, order, limit, newSkip)
+            .then((response) => setProducts(response.data))
+            .catch((err) => setError("Failed to load products From Backend!"));
+    };
+
+    console.log(skip);
 
     const showFilters = () => {
         return (
@@ -163,6 +175,15 @@ const Home = () => {
                             </Grid>
                         ))}
                 </Grid>
+            </div>
+            <div className="mb-7 w-full text-center">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleLoadMore}
+                >
+                    Load more...
+                </Button>
             </div>
         </Layout>
     );
