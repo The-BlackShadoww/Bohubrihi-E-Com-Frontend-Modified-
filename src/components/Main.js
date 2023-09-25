@@ -12,6 +12,7 @@ import AdminDashboard from "./admin/AdminDashboard";
 //--------------------------------------------------------
 import CreateCategory from "./admin/CreateCategory";
 import CreateProduct from "./admin/CreateProduct";
+import CreateCoupon from "./admin/CreateCoupon";
 //--------------------------------------------------------
 import ProductDetails from "./home/ProductDetails";
 //--------------------------------------------------------
@@ -48,29 +49,53 @@ const Main = () => {
                     }
                 />
                 <Route
-                    path="/shipping"
+                    path="/shipping/:discount"
                     element={
                         <PrivateRoute>
                             <ShippingAddress />
                         </PrivateRoute>
                     }
                 />
+                {/* <Route
+                    path="/shipping"
+                    element={
+                        <PrivateRoute>
+                            <ShippingAddress />
+                        </PrivateRoute>
+                    }
+                /> */}
                 <Route
-                    path="/payment"
+                    path="/payment/:discount"
                     element={
                         <PrivateRoute>
                             <Payment />
                         </PrivateRoute>
                     }
                 />
+                {/* <Route
+                    path="/payment"
+                    element={
+                        <PrivateRoute>
+                            <Payment />
+                        </PrivateRoute>
+                    }
+                /> */}
                 <Route
-                    path="/checkout"
+                    path="/checkout/:discount"
                     element={
                         <PrivateRoute>
                             <Checkout />
                         </PrivateRoute>
                     }
                 />
+                {/* <Route
+                    path="/checkout"
+                    element={
+                        <PrivateRoute>
+                            <Checkout />
+                        </PrivateRoute>
+                    }
+                /> */}
                 <Route
                     path="/admin/dashboard"
                     element={
@@ -92,6 +117,14 @@ const Main = () => {
                     element={
                         <AdminRoute>
                             <CreateProduct />
+                        </AdminRoute>
+                    }
+                />
+                <Route
+                    path="/create/coupon"
+                    element={
+                        <AdminRoute>
+                            <CreateCoupon />
                         </AdminRoute>
                     }
                 />

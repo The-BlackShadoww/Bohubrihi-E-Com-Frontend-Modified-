@@ -1,6 +1,9 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API } from "../../utils/config";
+import { getOrders, getComment } from "../../api/apiOrder";
+import { userInfo } from "../../utils/auth";
 import {
     Button,
     Card,
@@ -21,10 +24,38 @@ const ProductCard = ({ product, handleAddToCart }) => {
         maxHeight: "2em",
         lineHeight: "1em",
     };
+    const [commentCount, setCommentCount] = useState([]);
+    const [orders, setOrders] = useState([]);
+    // console.log(commentCount);
+
+    useEffect(() => {
+        getOrders()
+            .then((res) => setOrders(res.data))
+            .catch((err) => console.log(err));
+
+        getComment()
+            .then((res) => setCommentCount(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    const filterComment = commentCount.filter((c) => c.product === product._id);
+
+    const soldArr = orders.map((p) => {
+        let sold = null;
+        if (p.productId === product._id) {
+            sold = (
+                <span>
+                    <Typography variant="body1">Sold:{p.count}</Typography>
+                </span>
+            );
+        }
+        return sold;
+    });
 
     return (
         <div className="mb-10">
-            <Card sx={{ maxWidth: 340, maxHeight: 400 }}>
+            <Card sx={{ maxWidth: 340, maxHeight: 550 }}>
+                {/* {JSON.stringify(commentCount)} */}
                 <img
                     src={`${API}/product/photo/${product._id}`}
                     alt={product.name}
@@ -41,26 +72,36 @@ const ProductCard = ({ product, handleAddToCart }) => {
                             {product.name}
                         </Typography>
                     </div>
-                    <Typography variant="body2" color="text.secondary">
-                        <span>&#2547;</span>
-                        {product.price}
-                        {product.quantity ? (
-                            <span
-                                style={{
-                                    padding: 5,
-                                    backgroundColor: "orange",
-                                    borderRadius: 5,
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                In Stock
-                            </span>
-                        ) : (
-                            <span>Out of Stock</span>
-                        )}
-                    </Typography>
+                    <div>
+                        <Typography variant="body2" color="text.secondary">
+                            <span>&#2547;</span>
+                            {product.price}
+                            {product.quantity ? (
+                                <span
+                                    style={{
+                                        padding: 5,
+                                        backgroundColor: "orange",
+                                        borderRadius: 5,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    In Stock
+                                </span>
+                            ) : (
+                                <span>Out of Stock</span>
+                            )}
+                        </Typography>
+                    </div>
+                    {/* Show comments */}
+                    <div>
+                        <Typography variant="body1">
+                            Reviews:{filterComment.length}
+                        </Typography>
+                    </div>
+                    <div>{soldArr}</div>
                 </CardContent>
                 <CardActions>
+                    {/* ---- Sending products id as query to the productDetails page --- */}
                     <Link to={`/product/${product._id}`}>
                         <Button variant="contained" size="small">
                             View Product

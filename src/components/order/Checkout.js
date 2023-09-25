@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { getCartItems, getProfile } from "../../api/apiOrder";
 import { userInfo } from "../../utils/auth";
 import Layout from "../Layout";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, CardContent } from "@mui/material";
 
 const Checkout = () => {
+    const { discount } = useParams();
     const [orderItems, setOrderItems] = useState([]);
     const [values, setValues] = useState({
         phone: "",
@@ -32,12 +33,28 @@ const Checkout = () => {
     }, []);
 
     const getOrderTotal = () => {
-        const arr = orderItems.map(
-            (cartItem) => cartItem.price * cartItem.count
-        );
+        let arr = [];
+        if (discount > 0) {
+            arr = orderItems.map(
+                (cartItem) =>
+                    cartItem.price * cartItem.count -
+                    (cartItem.price * cartItem.count * discount) / 100
+            );
+        } else {
+            arr = orderItems.map((cartItem) => cartItem.price * cartItem.count);
+        }
+        console.log(arr);
         const sum = arr.reduce((a, b) => a + b, 0);
         return sum;
     };
+    //*--------- original -----------
+    // const getOrderTotal = () => {
+    //     const arr = orderItems.map(
+    //         (cartItem) => cartItem.price * cartItem.count
+    //     );
+    //     const sum = arr.reduce((a, b) => a + b, 0);
+    //     return sum;
+    // };
 
     const shippingDetails = () => (
         <>
@@ -56,6 +73,46 @@ const Checkout = () => {
             <br /> {city}-{postcode}, {country}
         </>
     );
+
+    const orderDetails = () => {
+        if (discount > 0) {
+            return (
+                <div className="mb-8">
+                    <ul className="">
+                        {orderItems.map((item) => (
+                            <li
+                                key={item._id}
+                                className="list-group-item"
+                                align="right"
+                            >
+                                {item.product ? item.product.name : ""} x{" "}
+                                {item.count} = ৳{" "}
+                                {item.price * item.count -
+                                    (item.price * item.count * discount) / 100}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        } else {
+            return (
+                <div className="mb-8">
+                    <ul className="">
+                        {orderItems.map((item) => (
+                            <li
+                                key={item._id}
+                                className="list-group-item"
+                                align="right"
+                            >
+                                {item.product ? item.product.name : ""} x{" "}
+                                {item.count} = ৳ {item.price * item.count}{" "}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+    };
 
     if (phone && address1 && address2 && postcode && country)
         return (
@@ -97,28 +154,12 @@ const Checkout = () => {
                                 </div>
                                 <div className="basis-2/5 p-4">
                                     <div style={{ height: "auto" }}>
-                                        <div className="mb-8">
-                                            <ul className="list-group list-group-flush">
-                                                {orderItems.map((item) => (
-                                                    <li
-                                                        key={item._id}
-                                                        className="list-group-item"
-                                                        align="right"
-                                                    >
-                                                        {item.product
-                                                            ? item.product.name
-                                                            : ""}{" "}
-                                                        x {item.count} = ৳{" "}
-                                                        {item.price *
-                                                            item.count}{" "}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
+                                        {orderDetails()}
                                         <div
-                                            className="flex justify-between"
+                                            className="flex justify-between p-3"
                                             style={{
-                                                backgroundColor: "#fffff9",
+                                                backgroundColor: "blue",
+                                                color: "white",
                                             }}
                                         >
                                             <span className="float-left">
@@ -131,7 +172,7 @@ const Checkout = () => {
                                     </div>
                                     <br />
 
-                                    <Link to="/payment">
+                                    <Link to={`/payment/${discount}`}>
                                         <Button
                                             variant="contained"
                                             size="small"

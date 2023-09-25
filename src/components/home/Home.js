@@ -3,19 +3,25 @@ import { useState, useEffect } from "react";
 import Layout from "../Layout";
 import ProductCard from "./Card";
 import { showError, showSuccess } from "../../utils/messages";
-import {
-    getCategories,
-    getProducts,
-    getFilteredProducts,
-    getOrderedProducts,
-} from "../../api/apiProduct";
 import CheckBox from "./CheckBox";
 import RadioBox from "./RadioBox";
 import Ordering from "./Ordering";
+import SortOption from "./SortOption";
+import Search from "./Search";
 import { prices } from "../../utils/prices";
 import { isAuthenticated, userInfo } from "../../utils/auth";
 import { addToCart } from "../../api/apiOrder";
 import { Button, Grid, Typography } from "@mui/material";
+import {
+    getProducts,
+    getCategories,
+    getOrderedProducts,
+    getSearchedProduct,
+    getFilteredProducts,
+    getProductsSortedBySold,
+    getProductsSortedByPrice,
+    getProductsSortedByReviews,
+} from "../../api/apiProduct";
 
 //! MY HOME ---------------
 const Home = () => {
@@ -27,6 +33,7 @@ const Home = () => {
     const [sortBy, setSortBy] = useState("createdAt");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [searched, setSearched] = useState("");
     const [filters, setFilters] = useState({
         category: [],
         price: [],
@@ -99,6 +106,26 @@ const Home = () => {
             .catch((err) => console.log(err.message));
     };
 
+    const handleSortOption = (e) => {
+        const option = e.target.value;
+        //todo ==> Convert this into switch
+        if (option === "price") {
+            getProductsSortedByPrice(option)
+                .then((res) => setProducts(res.data))
+                .catch((err) => console.log(err));
+        }
+        if (option === "sold") {
+            getProductsSortedBySold(option)
+                .then((res) => setProducts(res.data))
+                .catch((err) => console.log(err));
+        }
+        if (option === "review") {
+            getProductsSortedByReviews(option)
+                .then((res) => setProducts(res.data))
+                .catch((err) => console.log(err));
+        }
+    };
+
     const handleLoadMore = () => {
         const newSkip = skip + 1;
         setSkip(newSkip);
@@ -108,13 +135,34 @@ const Home = () => {
             .catch((err) => setError("Failed to load products From Backend!"));
     };
 
-    console.log(skip);
+    //* ------------- Searching ------------------
+
+    const handleSearchInput = (e) => {
+        const searchInput = e.target.value;
+        setSearched(searchInput);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+
+        const searchInput = e.target.value;
+        setSearched(searchInput);
+        console.log("searchInput =>", searched);
+
+        getSearchedProduct(searched)
+            .then((res) => setProducts(res.data))
+            .catch((err) => console.log(err));
+    };
 
     const showFilters = () => {
         return (
             <div className="mb-10">
+                <Search
+                    handleSearchInput={handleSearchInput}
+                    handleSearchSubmit={handleSearchSubmit}
+                />
                 <Grid container>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Typography variant="h5">
                             Filter By Categories:
                         </Typography>
@@ -129,7 +177,7 @@ const Home = () => {
                         </ul>
                         {/* {JSON.stringify(filters)} */}
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Typography variant="h5">Filter By Price:</Typography>
 
                         <div className="">
@@ -142,9 +190,13 @@ const Home = () => {
                         </div>
                     </Grid>
                     {/* //todo ==> Modifications */}
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Typography variant="h5">Select ordering:</Typography>
                         <Ordering handleOrder={handleOrder} />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography variant="h5">Sort By:</Typography>
+                        <SortOption handleSortOption={handleSortOption} />
                     </Grid>
                 </Grid>
             </div>

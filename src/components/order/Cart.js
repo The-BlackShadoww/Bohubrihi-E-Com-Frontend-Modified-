@@ -8,10 +8,15 @@ import {
 } from "../../api/apiOrder";
 import { userInfo } from "../../utils/auth";
 import CartItem from "./CartItem";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { getCoupon } from "../../api/apiAdmin";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [code, setCode] = useState("");
+    const [coupon, setCoupon] = useState([]);
+    const [discount, setDiscount] = useState(0);
+    console.log(discount);
 
     const loadCart = () => {
         getCartItems(userInfo().token)
@@ -20,8 +25,13 @@ const Cart = () => {
     };
     useEffect(() => {
         loadCart();
-    }, []);
+        //! Discount
+        coupon.forEach((d) => {
+            setDiscount(d.amount);
+        });
+    }, [coupon]);
 
+    //! Increase item
     const increaseItem = (item) => () => {
         if (item.count === 5) return;
         const cartItem = {
@@ -34,6 +44,7 @@ const Cart = () => {
             .catch((error) => console.log(error.response));
     };
 
+    //! Decrease item
     const decreaseItem = (item) => () => {
         if (item.count === 1) return;
         const cartItem = {
@@ -46,13 +57,31 @@ const Cart = () => {
             .catch((error) => console.log(error.response));
     };
 
+    //! Get Total
+    //* -------- original ---------
+    // const getCartTotal = () => {
+    //     const arr = cartItems.map((item) => item.price * item.count);
+    //     const sum = arr.reduce((a, b) => a + b, 0);
+    //     return sum;
+    // };
+    // * --------------- Modified ----------
     const getCartTotal = () => {
-        const arr = cartItems.map((item) => item.price * item.count);
-        console.log(arr);
+        let arr = [];
+        if (discount === 0) {
+            arr = cartItems.map((item) => item.price * item.count);
+        } else {
+            arr = cartItems.map(
+                (item) =>
+                    item.price * item.count -
+                    (item.price * item.count * discount) / 100
+            );
+        }
+
         const sum = arr.reduce((a, b) => a + b, 0);
         return sum;
     };
 
+    //! Remove item
     const removeItem = (item) => () => {
         if (!window.confirm("Delete Item?")) return;
         deleteCartItem(userInfo().token, item)
@@ -60,6 +89,21 @@ const Cart = () => {
                 loadCart();
             })
             .catch((err) => console.log(err.message));
+    };
+
+    //! Coupon
+    const handleChange = (e) => {
+        setCode(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        getCoupon(code)
+            .then((res) => setCoupon(res.data))
+            .catch((err) => console.log(err));
+
+        setCode("");
     };
 
     return (
@@ -70,33 +114,23 @@ const Cart = () => {
         >
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                    <li class="">
                         <a href="#">Order</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Cart
-                    </li>
+                    <li class="breadcrumb-item active">Cart</li>
                 </ol>
             </nav>
             <div className="w-full">
-                <table className="border w-full">
+                <table className="border w-full text-center">
                     <thead className="border">
                         <tr className="border">
                             <th scope="col" width="15%">
                                 #
                             </th>
-                            <th className="border" scope="col">
-                                Image
-                            </th>
-                            <th className="border" scope="col">
-                                Product Name
-                            </th>
-                            <th className="border" scope="col">
-                                Quantity
-                            </th>
-                            <th className="border" scope="col" align="right">
-                                Price
-                            </th>
+                            <th className="border">Image</th>
+                            <th className="border">Product Name</th>
+                            <th className="border">Quantity</th>
+                            <th className="border">Price</th>
                             <th scop="col">Remove</th>
                         </tr>
                     </thead>
@@ -109,6 +143,7 @@ const Cart = () => {
                                 increaseItem={increaseItem(item)}
                                 decreaseItem={decreaseItem(item)}
                                 removeItem={removeItem(item)}
+                                discount={discount}
                             />
                         ))}
                         <tr className="border">
@@ -116,20 +151,73 @@ const Cart = () => {
                             <td className="border" colSpan={2}>
                                 Total
                             </td>
-                            <td className="border" align="right">
+                            <td>
                                 ৳{getCartTotal()}
+                                {coupon.length !== 0 ? (
+                                    <span
+                                        className="ml-2"
+                                        style={{
+                                            color: "red",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Discounted
+                                    </span>
+                                ) : null}
                             </td>
                             <td />
                         </tr>
+                        {/* ------------- Modifications ---------------- */}
+                        <tr className="border">
+                            <td colSpan={2} className="border">
+                                <Typography variant="body1">
+                                    Use a coupon
+                                </Typography>
+                            </td>
+                            <td colSpan={2}>
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="w-full justify-between flex p-2"
+                                >
+                                    <input
+                                        type="text"
+                                        placeholder="coupon code"
+                                        onChange={handleChange}
+                                        required
+                                        className="border border-black w-3/4 p-2"
+                                    />
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        // size="small"
+                                        color="info"
+                                    >
+                                        Check
+                                    </Button>
+                                </form>
+                            </td>
+                            <td colSpan={2} className="border">
+                                <div className="flex">
+                                    <p className="mr-2">Coupon name: </p>
+                                    {coupon &&
+                                        coupon.map((c) => (
+                                            <Typography variant="2">
+                                                {c.name}
+                                            </Typography>
+                                        ))}
+                                </div>
+                            </td>
+                        </tr>
+                        {/* ---------------------------------- */}
                         <tr>
                             <th scope="row" />
-                            <td colSpan={4} className="text-right">
-                                <Link to="/">
+                            <td colSpan={6} className="p-4">
+                                <Link to="/" className="mr-4">
                                     <Button variant="contained">
                                         Continue Shopping
                                     </Button>
                                 </Link>
-                                <Link to="/shipping">
+                                <Link to={`/shipping/${discount}`}>
                                     <Button variant="contained" color="success">
                                         Proceed To Checkout
                                     </Button>

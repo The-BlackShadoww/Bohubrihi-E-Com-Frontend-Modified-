@@ -1,16 +1,18 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { initPayment } from "../../api/apiOrder";
 import { userInfo } from "../../utils/auth";
+import { Button, Typography } from "@mui/material";
 
 const Payment = () => {
+    const { discount } = useParams();
     const [sessionSuccess, setSessionSuccess] = useState(false);
     const [failed, setFailed] = useState(false);
     const [redirectUrl, setRedirectUrl] = useState("");
 
     useEffect(() => {
-        initPayment(userInfo().token)
+        initPayment(userInfo().token, discount)
             .then((response) => {
                 if (response.data.status === "SUCCESS") {
                     setSessionSuccess(true);
@@ -19,6 +21,7 @@ const Payment = () => {
                 }
             })
             .catch((err) => {
+                console.log(err);
                 setFailed(true);
                 setSessionSuccess(false);
             });
@@ -31,8 +34,14 @@ const Payment = () => {
                 : "Payment is processing..."}
             {failed ? (
                 <>
-                    <p>Failed to start payment session!!</p>
-                    <Link>Go to cart</Link>
+                    <Typography variant="h3">
+                        Failed to start payment session!!
+                    </Typography>
+                    <Link to={"/cart"}>
+                        <Button variant="contained" color="error">
+                            Go to cart
+                        </Button>
+                    </Link>
                 </>
             ) : (
                 ""

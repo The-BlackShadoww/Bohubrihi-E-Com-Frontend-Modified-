@@ -2,7 +2,24 @@ import React from "react";
 import { API } from "../../utils/config";
 import { Button } from "@mui/material";
 
-const CartItem = ({ item, serial, increaseItem, decreaseItem, removeItem }) => {
+const CartItem = ({
+    item,
+    serial,
+    increaseItem,
+    decreaseItem,
+    removeItem,
+    discount,
+}) => {
+    const getTotal = () => {
+        let total = 0;
+        if (discount === 0) {
+            total = item.price * item.count;
+        }
+        if (discount !== 0) {
+            total = item.price * item.count - (item.price * item.count * discount) / 100;
+        }
+        return total;
+    };
     return (
         <tr className="border">
             <th scope="row">{serial}</th>
@@ -25,9 +42,8 @@ const CartItem = ({ item, serial, increaseItem, decreaseItem, removeItem }) => {
                 </Button>
                 {/* <button onClick={increaseItem}>+</button> */}
             </td>
-            <td className="border" align="right">
-                ৳ {item.price * item.count}
-            </td>
+            {/* <td className="border">৳ {item.price * item.count}</td> */}
+            <td className="border">৳ {getTotal()}</td>
             <td className="border">
                 <Button variant="contained" color="error" onClick={removeItem}>
                     Remove From Cart

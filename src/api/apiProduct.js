@@ -49,3 +49,47 @@ export const getOrderedProducts = (order, sortBy) => {
         },
     });
 };
+
+export const getProductsSortedByPrice = (option) => {
+    const data = {
+        option: option,
+    };
+    return axios.post(`${API}/product/price`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};
+
+export const getProductsSortedBySold = (option) => {
+    const data = {
+        option: option,
+    };
+    return axios.post(`${API}/product/sold`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};
+
+export const getProductsSortedByReviews = (option) => {
+    const data = {
+        option: option,
+    };
+    return axios.post(`${API}/product/review`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};
+
+export const getSearchedProduct = (product) => {
+    const data = {
+        product: product,
+    };
+    return axios.post(`${API}/product/search`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};

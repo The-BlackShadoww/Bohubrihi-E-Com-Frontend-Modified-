@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Button, Card, Typography } from "@mui/material";
 import { getProfile, updateProfile } from "../../api/apiOrder";
 import { userInfo } from "../../utils/auth";
 
 const ShippingAddress = () => {
+    const { discount } = useParams();
     const [values, setValues] = useState({
         phone: "",
         address1: "",
@@ -103,14 +104,16 @@ const ShippingAddress = () => {
                         onChange={handleChange}
                     />
                     <br />
-                    <Button
-                        variant="contained"
-                        type="submit"
-                        className="btn btn-primary btn-sm float-right"
-                        disabled={disabled}
-                    >
-                        Save and Checkout
-                    </Button>
+                    <Link to={`/checkout/${discount}`}>
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            className="btn btn-primary btn-sm float-right"
+                            disabled={disabled}
+                        >
+                            Save and Checkout
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </form>

@@ -79,9 +79,6 @@ const CreateCategory = () => {
                 <Button type="submit" variant="contained">
                     Create Category
                 </Button>
-                {/* <button type="submit" className="">
-                    Create Category
-                </button> */}
             </form>
         );
     };
@@ -93,9 +90,6 @@ const CreateCategory = () => {
                     Go to Dashboard
                 </Link>
             </Button>
-            {/* <Link to="/admin/dashboard" className="">
-                Go to Dashboard
-            </Link> */}
         </div>
     );
 
@@ -105,8 +99,8 @@ const CreateCategory = () => {
                 title="Add a new category"
                 description="Ready to add a new category?"
             >
-                <div className="row">
-                    <div className="col-md-8 offset-md-2">
+                <div className="">
+                    <div className="">
                         {showLoading(loading)}
                         {showError(error, error)}
                         {showSuccess(success, "Category Created!")}
