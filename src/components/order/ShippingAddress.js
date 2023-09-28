@@ -19,6 +19,7 @@ const ShippingAddress = () => {
     const [redirect, setRedirect] = useState(false);
 
     const { phone, address1, address2, city, postcode, country } = values;
+    console.log(values);
 
     useEffect(() => {
         getProfile(userInfo().token)
@@ -104,16 +105,15 @@ const ShippingAddress = () => {
                         onChange={handleChange}
                     />
                     <br />
-                    <Link to={`/checkout/${discount}`}>
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            className="btn btn-primary btn-sm float-right"
-                            disabled={disabled}
-                        >
-                            Save and Checkout
-                        </Button>
-                    </Link>
+
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        className="btn btn-primary btn-sm float-right"
+                        disabled={disabled}
+                    >
+                        Save and Checkout
+                    </Button>
                 </div>
             </div>
         </form>
@@ -126,7 +126,7 @@ const ShippingAddress = () => {
                 description="Complete your order!"
                 className="container"
             >
-                {redirect ? <Navigate to="/checkout" /> : ""}
+                {redirect ? <Navigate to={`/checkout/${discount}`} /> : ""}
                 <nav>
                     <ol className="flex">
                         <li>

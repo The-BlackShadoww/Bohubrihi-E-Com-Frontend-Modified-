@@ -43,7 +43,7 @@ const Checkout = () => {
         } else {
             arr = orderItems.map((cartItem) => cartItem.price * cartItem.count);
         }
-        console.log(arr);
+        
         const sum = arr.reduce((a, b) => a + b, 0);
         return sum;
     };

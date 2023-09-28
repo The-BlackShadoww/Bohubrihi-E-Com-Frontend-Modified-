@@ -12,7 +12,6 @@ const DashBoard = () => {
     useEffect(() => {
         getUserHistory(userInfo().token)
             .then((res) => {
-                console.log("Response Data =>", res.data);
                 const groupedHistory = res.data.reduce((acc, order) => {
                     if (!acc[order.transaction_id]) {
                         acc[order.transaction_id] = {
@@ -22,6 +21,7 @@ const DashBoard = () => {
                             sessionKey: order.sessionKey,
                             address: order.address,
                             paymentStatus: order.paymentStatus,
+                            discount: order.discount,
                             items: [],
                         };
                     }
@@ -30,7 +30,6 @@ const DashBoard = () => {
                 }, {});
 
                 const groupedHistoryArray = Object.values(groupedHistory);
-                console.log("groupedHistoryArray =>", groupedHistoryArray);
 
                 setHistory(groupedHistoryArray);
             })
@@ -147,7 +146,10 @@ const DashBoard = () => {
                                         <td className="border border-black">
                                             {order.items.map((item) => (
                                                 <div key={item._id}>
-                                                    {item.price}
+                                                    {item.price -
+                                                        (item.price *
+                                                            order.discount) /
+                                                            100}
                                                 </div>
                                             ))}
                                         </td>

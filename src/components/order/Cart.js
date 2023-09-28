@@ -16,8 +16,7 @@ const Cart = () => {
     const [code, setCode] = useState("");
     const [coupon, setCoupon] = useState([]);
     const [discount, setDiscount] = useState(0);
-    console.log(discount);
-
+    
     const loadCart = () => {
         getCartItems(userInfo().token)
             .then((response) => setCartItems(response.data))
@@ -113,11 +112,11 @@ const Cart = () => {
             className="container"
         >
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="">
+                <ol>
+                    <li>
                         <a href="#">Order</a>
                     </li>
-                    <li class="breadcrumb-item active">Cart</li>
+                    <li>Cart</li>
                 </ol>
             </nav>
             <div className="w-full">

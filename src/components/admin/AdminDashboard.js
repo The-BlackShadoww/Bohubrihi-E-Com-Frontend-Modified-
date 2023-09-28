@@ -27,6 +27,7 @@ const AdminDashboard = () => {
                             sessionKey: order.sessionKey,
                             address: order.address,
                             paymentStatus: order.paymentStatus,
+                            discount: order.discount,
                             items: [],
                         };
                     }
@@ -163,7 +164,10 @@ const AdminDashboard = () => {
                                         <td className="border border-black">
                                             {order.items.map((item) => (
                                                 <div key={item._id}>
-                                                    {item.price}
+                                                    {item.price -
+                                                        (item.price *
+                                                            order.discount) /
+                                                            100}
                                                 </div>
                                             ))}
                                         </td>
