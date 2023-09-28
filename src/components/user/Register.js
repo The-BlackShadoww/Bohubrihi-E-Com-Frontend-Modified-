@@ -100,14 +100,6 @@ const Register = () => {
                 <Button variant="contained" type="submit" disabled={disabled}>
                     Create Account
                 </Button>
-
-                {/* <button
-                    type="submit"
-                    className="w-full border p-4"
-                    disabled={disabled}
-                >
-                    Create Account
-                </button> */}
             </form>
         );
         return form;

@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import "./card.css";
 
-//! MY CARD ----------------------------
 const ProductCard = ({ product, handleAddToCart }) => {
     const titleStyle = {
         display: "block",

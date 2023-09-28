@@ -26,6 +26,7 @@ const AdminDashboard = () => {
                             status: order.status,
                             sessionKey: order.sessionKey,
                             address: order.address,
+                            paymentStatus: order.paymentStatus,
                             items: [],
                         };
                     }
@@ -117,7 +118,10 @@ const AdminDashboard = () => {
                                         Status
                                     </th>
                                     <th className="border border-black">
-                                        Product 
+                                        Payment status
+                                    </th>
+                                    <th className="border border-black">
+                                        Product
                                     </th>
                                     <th className="border border-black">
                                         Price
@@ -145,6 +149,9 @@ const AdminDashboard = () => {
                                         </td>
                                         <td className="border border-black">
                                             {order.status}
+                                        </td>
+                                        <td className="border border-black">
+                                            {order.paymentStatus}
                                         </td>
                                         <td className="border border-black">
                                             {order.items.map((item) => (

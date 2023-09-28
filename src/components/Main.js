@@ -31,7 +31,6 @@ const Main = () => {
                 <Route path="/login" exact Component={Login} />
                 <Route path="/register" exact Component={Register} />
                 <Route path="/product/:id" exact Component={ProductDetails} />
-                {/* <Route path="/cart" exact Component={Cart} /> */}
                 <Route
                     path="/cart"
                     element={
@@ -56,14 +55,7 @@ const Main = () => {
                         </PrivateRoute>
                     }
                 />
-                {/* <Route
-                    path="/shipping"
-                    element={
-                        <PrivateRoute>
-                            <ShippingAddress />
-                        </PrivateRoute>
-                    }
-                /> */}
+
                 <Route
                     path="/payment/:discount"
                     element={
@@ -72,14 +64,7 @@ const Main = () => {
                         </PrivateRoute>
                     }
                 />
-                {/* <Route
-                    path="/payment"
-                    element={
-                        <PrivateRoute>
-                            <Payment />
-                        </PrivateRoute>
-                    }
-                /> */}
+
                 <Route
                     path="/checkout/:discount"
                     element={
@@ -88,14 +73,7 @@ const Main = () => {
                         </PrivateRoute>
                     }
                 />
-                {/* <Route
-                    path="/checkout"
-                    element={
-                        <PrivateRoute>
-                            <Checkout />
-                        </PrivateRoute>
-                    }
-                /> */}
+
                 <Route
                     path="/admin/dashboard"
                     element={

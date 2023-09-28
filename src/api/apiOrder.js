@@ -1,22 +1,3 @@
-// import axios from "axios";
-// import { API } from "../utils/config";
-
-// export const addToCart = async (token, cartItem) => {
-//     try {
-//         const res = await axios.post(`${API}/cart`, cartItem, {
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 Authorization: `Bearer ${token}`,
-//             },
-//         });
-
-//         return res;
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-
-//! ----------v1-------------------
 import axios from "axios";
 import { API } from "../utils/config";
 

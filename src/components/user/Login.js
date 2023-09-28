@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../Layout";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { showError, showLoading } from "../../utils/messages";
 import { login } from "../../api/apiAuth";
 import { authenticate, isAuthenticated, userInfo } from "../../utils/auth";
@@ -121,7 +121,6 @@ const Login = () => {
                 Login Here,
             </Typography>
             {signInForm()}
-            <hr />
         </Layout>
     );
 };
